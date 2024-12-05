@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "personal-mentor"
+version = "0.1.0"
+description = ""
+authors = ["Tobias Leinß <tobias@leinss.xyz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain-core = "^0.3.21"
+langchain-community = "^0.3.9"
+langgraph = "^0.2.53"
+duckduckgo-search = "^6.3.7"
+langchain-google-vertexai = "^2.0.8"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+pylint = "^3.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

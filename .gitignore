@@ -1,0 +1,6 @@
+_resources
+__pycache__
+
+vertexai.json
+.env
+*.png
