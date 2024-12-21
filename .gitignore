@@ -2,5 +2,6 @@ _resources
 __pycache__
 
 vertexai.json
+*.json
 .env
 *.png

@@ -1,14 +1,44 @@
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import MessagesState
 
+from .llms import LLM
+from .state import State
 from .tools import llm_with_tools
 
 sys_prompt = """
-You are a helpful assistant tasked with using search and performing arithmetic on a set of inputs.
-"""
+You are a helpful assistant who can use several tools at your disposal.
 
+Search, performing arithmetics on a set of inputs and getting the weather forecast.
+
+If you need to search, try duckduckgo search first, if you get an error or rate limited, use brave search.
+"""
 sys_msg = SystemMessage(content=sys_prompt)
 
 
+def chatbot(state: State):
+    return {"messages": [LLM.invoke(state["messages"])]}
+
+
 def reasoner(state: MessagesState):
-    return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+    # print('state:')
+    # for k, v in state.items():
+    #     print(f'{k}: {v}')
+
+    # query = state["query"]
+    # print(f'query {query}\n')
+
+    messages = state["messages"]
+    # if len(messages) == 1:
+    #     messages = [sys_msg, *messages]
+
+    # print(f"messages {messages}\n")
+
+    return {"messages": [llm_with_tools.invoke(messages)]}
+
+
+if __name__ == "__main__":
+    state = {"messages": [HumanMessage(content="What is 2 times Brad Pitt's age?")]}
+
+    result = reasoner(state)
+    for m in result["messages"]:
+        m.pretty_print()

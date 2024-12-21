@@ -17,7 +17,7 @@ def get_vertex_models(model_name: str, **kwargs):
     )
 
 
-LLM = get_vertex_models("gemini-1.5-pro-002")
+LLM = get_vertex_models("gemini-2.0-flash-exp")
 LLM_RANDOM = get_vertex_models("gemini-1.5-pro-002", temperature=1.0)
 
 CONTEXT_WINDOW = {
