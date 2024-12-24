@@ -8,10 +8,10 @@ from .tools import llm_with_tools
 sys_prompt = """
 You are a helpful assistant who can use several tools at your disposal.
 
-Search, performing arithmetics on a set of inputs and getting the weather forecast.
-
-If you need to search, try duckduckgo search first, if you get an error or rate limited, use brave search.
+Performing arithmetics on a set of inputs, getting the weather forecast and running a websearch for things you don't know.
 """
+# If you need to search, try duckduckgo search first, if you get an error or rate limited, use brave search.
+
 sys_msg = SystemMessage(content=sys_prompt)
 
 
