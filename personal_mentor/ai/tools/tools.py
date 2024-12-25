@@ -1,3 +1,22 @@
+"""
+A collection of tools for the Personal Mentor AI.
+
+This module exports a list of tools which can be used in the Personal Mentor
+graph. The tools are:
+
+- `add`: a tool that adds two numbers
+- `divide`: a tool that divides two numbers
+- `multiply`: a tool that multiplies two numbers
+- `subtract`: a tool that subtracts two numbers
+- `weather_forecast`: a tool that retrieves the current weather forecast for a
+  given location
+- `BraveSearch`: a tool that searches the web using Brave
+- `DuckDuckGoSearchRun`: a tool that searches the web using DuckDuckGo
+
+The tools are loaded from their respective modules and exposed in this module
+for convenience.
+"""
+
 import os
 
 from dotenv import load_dotenv

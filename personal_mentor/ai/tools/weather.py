@@ -7,8 +7,26 @@ from personal_mentor.utils.logging import logger
 
 
 def generate_forecast_text(daily_forecast):
+    """
+    Takes a daily_forecast as obtained from the OpenWeatherMap API and
+    generates a friendly text which summarizes the forecast.
+
+    Parameters
+    ----------
+    daily_forecast : dict
+        A dictionary containing the daily forecast as obtained from the
+        OpenWeatherMap API.
+
+    Returns
+    -------
+    str
+        A friendly text summarizing the daily forecast.
+    """
     # Convert the forecast response into a nice text using OpenAI
-    prompt = f"Convert the following forecast data into a friendly text which will be read: {daily_forecast}"
+    prompt = (
+        f"Convert the following forecast data into a friendly text which "
+        "will be read: {daily_forecast}"
+    )
     response = LLM.invoke(
         [
             {

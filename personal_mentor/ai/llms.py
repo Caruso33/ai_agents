@@ -1,3 +1,14 @@
+"""
+Langchain Google Vertex AI module.
+
+This module provides a langchain interface to Google Cloud Vertex AI's 
+chat models.
+It uses the `langchain_google_vertexai` library under the hood.
+
+This module is used to define the LLM that is used by the graph.
+
+"""
+
 import os
 
 from dotenv import load_dotenv
@@ -9,6 +20,17 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = rf"{os.getcwd()}/vertexai.json"
 
 
 def get_vertex_models(model_name: str, **kwargs):
+    """
+    Retrieves a ChatVertexAI model instance configured with the specified
+    model name and additional parameters.
+
+    Args:
+        model_name: A string representing the name of the model.
+        **kwargs: Additional keyword arguments for model configuration.
+
+    Returns:
+        An instance of ChatVertexAI configured with the specified model name and parameters.
+    """
     return ChatVertexAI(
         model_name=model_name,
         project=os.getenv("GOOGLE_CLOUD_PROJECT"),

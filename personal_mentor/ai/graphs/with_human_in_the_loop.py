@@ -1,4 +1,3 @@
-from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -19,8 +18,10 @@ def build_graph():
     builder.add_edge(START, "reasoner")
     builder.add_conditional_edges(
         "reasoner",
-        # If the latest message (result) from node reasoner is a tool call -> tools_condition routes to tools
-        # If the latest message (result) from node reasoner is a not a tool call -> tools_condition routes to END
+        # If the latest message (result) from node reasoner is a
+        #   tool call -> tools_condition routes to tools
+        # If the latest message (result) from node reasoner is
+        #   not a tool call -> tools_condition routes to END
         tools_condition,
         {"tools": "tools", END: END},
     )

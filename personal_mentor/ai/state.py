@@ -6,7 +6,19 @@ from langgraph.graph.message import add_messages
 
 
 class State(TypedDict):
-    """State of the graph."""
+    """
+    The State of the Personal Mentor graph.
+
+    This class represents the state of the graph which is a dictionary that
+    contains the following keys:
+
+    - query: The current query from the user.
+    - messages: A list of AnyMessage objects which are the messages exchanged
+      between the user and the AI in the chat.
+
+    This class uses the TypedDict type hint from the typing module to specify
+    the types of the keys in the dictionary.
+    """
 
     query: str
 

@@ -8,7 +8,8 @@ from .tools import llm_with_tools
 sys_prompt = """
 You are a helpful assistant who can use several tools at your disposal.
 
-Performing arithmetics on a set of inputs, getting the weather forecast and running a websearch for things you don't know.
+Performing arithmetics on a set of inputs, getting the weather forecast and 
+running a websearch for things you don't know.
 """
 # If you need to search, try duckduckgo search first, if you get an error or rate limited, use brave search.
 
@@ -16,10 +17,40 @@ sys_msg = SystemMessage(content=sys_prompt)
 
 
 def chatbot(state: State):
+    """
+    This node is the entry point for the chatbot application.
+    It takes a state containing a list of messages and returns a new state
+    with the messages processed by the chatbot.
+
+    Parameters
+    ----------
+    state : State
+        The state of the application containing a list of messages.
+
+    Returns
+    -------
+    State
+        A new state with the messages processed by the chatbot.
+    """
     return {"messages": [LLM.invoke(state["messages"])]}
 
 
 def reasoner(state: MessagesState):
+    """
+    This node is the reasoning engine for the chatbot application.
+    It takes a state containing a list of messages and returns a new state
+    with the messages processed by the reasoning engine.
+
+    Parameters
+    ----------
+    state : MessagesState
+        The state of the application containing a list of messages.
+
+    Returns
+    -------
+    State
+        A new state with the messages processed by the reasoning engine.
+    """
     # print('state:')
     # for k, v in state.items():
     #     print(f'{k}: {v}')

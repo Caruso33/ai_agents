@@ -1,12 +1,10 @@
-from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
-from langgraph.prebuilt import ToolNode, tools_condition
 
 from ..nodes import reasoner
 from ..state import State
 from ..tools import tools
-from .utils import BasicToolNode, route_tools, run_graph, stream_graph_updates
+from .utils import BasicToolNode, route_tools, run_graph
 
 
 def build_graph():
@@ -20,8 +18,10 @@ def build_graph():
     builder.add_edge(START, "reasoner")
     builder.add_conditional_edges(
         "reasoner",
-        # If the latest message (result) from node reasoner is a tool call -> tools_condition routes to tools
-        # If the latest message (result) from node reasoner is a not a tool call -> tools_condition routes to END
+        # If the latest message (result) from node reasoner is
+        #   a tool call -> tools_condition routes to tools
+        # If the latest message (result) from node reasoner is
+        #   not a tool call -> tools_condition routes to END
         route_tools,
         # tools_condition,
         {"tools": "tools", END: END},
@@ -39,7 +39,8 @@ if __name__ == "__main__":
     # save_graph(graph)
 
     # query = "What is 2 times Brad Pitt's age?"
-    # # query = "what is the current weather in Bangkok in Thailand times 3 minus the age of Brad Pitt?"
+    # # query = "what is the current weather in Bangkok in Thailand times
+    # 3 minus the age of Brad Pitt?"
 
     # messages = graph.invoke({"messages": [HumanMessage(content=query)]})
 
