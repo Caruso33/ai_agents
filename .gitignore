@@ -2,6 +2,9 @@ _resources
 __pycache__
 
 vertexai.json
+
 *.json
+!.vscode/settings.json
+
 .env
 *.png

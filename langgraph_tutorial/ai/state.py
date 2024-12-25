@@ -5,9 +5,9 @@ from typing import Annotated, Sequence, TypedDict
 from langgraph.graph.message import add_messages
 
 
-class State(TypedDict):
+class State(TypedDict):  # MessageState is simple State as well to use
     """
-    The State of the Personal Mentor graph.
+    The State of the graph.
 
     This class represents the state of the graph which is a dictionary that
     contains the following keys:
@@ -20,8 +20,8 @@ class State(TypedDict):
     the types of the keys in the dictionary.
     """
 
-    query: str
-
+    # query: str
+    ask_human: bool
     # weather: str
     # weather_answer: str
 

@@ -2,8 +2,8 @@ import os
 
 import requests
 
-from personal_mentor.ai.llms import LLM
-from personal_mentor.utils.logging import logger
+from langgraph_tutorial.ai.llms import LLM
+from langgraph_tutorial.utils.logging import logger
 
 
 def generate_forecast_text(daily_forecast):

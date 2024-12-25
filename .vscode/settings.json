@@ -1,0 +1,3 @@
+{
+  "python.analysis.extraPaths": ["personal_mentor", "langraph_tutorial"]
+}

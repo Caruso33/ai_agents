@@ -8,7 +8,7 @@ from .utils import BasicToolNode, route_tools, run_graph
 
 def build_graph():
     """
-    Builds the graph for the personal mentor with tools.
+    Builds the graph for the with tools.
 
     This graph consists of a reasoner node and a tools node. The reasoner node
     is the entry point of the graph and it routes the input messages to either

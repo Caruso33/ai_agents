@@ -1,8 +1,8 @@
 """
-A collection of tools for the Personal Mentor AI.
+A collection of tools for the AI.
 
-This module exports a list of tools which can be used in the Personal Mentor
-graph. The tools are:
+This module exports a list of tools which can be used in the graph. 
+The tools are:
 
 - `add`: a tool that adds two numbers
 - `divide`: a tool that divides two numbers
@@ -22,6 +22,8 @@ import os
 from dotenv import load_dotenv
 from langchain.tools import tool
 from langchain_community.tools import BraveSearch, DuckDuckGoSearchRun
+
+from langgraph_tutorial.ai.models import RequestAssistance
 
 from ..llms import LLM
 from .maths import add, divide, multiply, subtract
@@ -47,6 +49,7 @@ search_tools = [
 ]
 other_tools = [
     tool(weather_forecast),
+    RequestAssistance,
 ]
 
 tools = [

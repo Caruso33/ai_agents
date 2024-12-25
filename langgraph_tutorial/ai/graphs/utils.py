@@ -2,9 +2,13 @@ import json
 import os
 from typing import Optional
 
-from langchain_core.messages import AIMessage, AnyMessage, ToolMessage
+from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 from langgraph.graph import END
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.prebuilt import tools_condition
+
+from langgraph_tutorial.ai.nodes import create_tool_response
+from langgraph_tutorial.ai.tools.request_assistance import RequestAssistance
 
 from ..state import State
 
@@ -61,6 +65,13 @@ def route_tools(
     return END
 
 
+def select_next_node(state: State):
+    if state["ask_human"]:
+        return "human"
+    # Otherwise, we can route as before
+    return tools_condition(state)
+
+
 def resume_graph(
     graph: CompiledStateGraph, config: dict, message: Optional[AnyMessage] = None
 ):
@@ -80,15 +91,15 @@ def resume_graph(
     Returns:
         An iterator over the events of the graph.
     """
-    snapshot = graph.get_state(config)
+    # snapshot = graph.get_state(config)
 
-    if snapshot.next[0] == "tools":
-        events = graph.stream(
-            message, config, stream_mode="values"
-        )  # None means continue the graph
-        for event in events:
-            if "messages" in event:
-                event["messages"][-1].pretty_print()
+    # if snapshot.next[0] == "tools":
+    events = graph.stream(
+        message, config, stream_mode="values"
+    )  # None means continue the graph
+    for event in events:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
 
 
 def stream_graph_updates(
@@ -113,23 +124,61 @@ def stream_graph_updates(
             for value in event.values():
                 print("Assistant:", value["messages"][-1].content)
 
-    else:
-        for event in graph.stream(
-            {"messages": [("user", user_input)]},
-            config,
-            stream_mode="values",
+    elif True is False:  # for `with_custom_state`
+        new_message = HumanMessage(
+            content=(
+                "I need some expert guidance for choosing which socks to wear today. "
+                "Could you request assistance for me?"
+            )
+        )
+        resume_graph(graph, config, {"messages": [new_message]})
+
+        snapshot = graph.get_state(config)
+        existing_message = snapshot.values["messages"][-1]
+
+        if (
+            not hasattr(existing_message, "tool_calls")
+            or len(existing_message.tool_calls) == 0
+            or existing_message.tool_calls[0]["name"] != RequestAssistance.__name__
         ):
-            event["messages"][-1].pretty_print()
+            raise ValueError(
+                (
+                    "Expected RequestAssistance tool call, but got ",
+                    f"{existing_message.tool_calls} {existing_message.content} instead",
+                )
+            )
 
-    should_play_with_state = True
+        # create assistance tool message when requested
+        user_request = (
+            graph.get_state(config)
+            .values["messages"][-1]
+            .tool_calls[0]["args"]["request"]
+        )
+        human_response = (
+            "We, the experts are here to help!"
+            f" For the request {user_request}"
+            " We thoroughly researched it and advise to go for the unmatched socks in color green an pink."
+        )
+        tool_message = create_tool_response(human_response, existing_message)
+        resume_graph(graph, config, {"messages": [tool_message]})
 
-    if should_play_with_state:
-        intervention = True
+    else:
+        resume_graph(graph, config, {"messages": [("user", user_input)]})
 
-        if not intervention:
+        # for event in graph.stream(
+        #     {"messages": [("user", user_input)]},
+        #     config,
+        #     stream_mode="values",
+        # ):
+        #     event["messages"][-1].pretty_print()
+
+    if True is True:
+
+        if True is False:
+            # for `with_human_in_the_loop` to pass without doing anything
             resume_graph(graph, config, None)
 
-        else:
+        elif True is False:  # for `with_human_in_the_loop`
             snapshot = graph.get_state(config)
             print("next snapshot: ", snapshot.next)
 
@@ -137,8 +186,6 @@ def stream_graph_updates(
             print("tool_calls: ", existing_message.tool_calls)
 
             # overriding tool call
-            print("Original")
-            print("Message ID", existing_message.id)
             print(existing_message.tool_calls[0])
             new_tool_call = existing_message.tool_calls[0].copy()
             new_tool_call["args"]["query"] = "What the heck is 0 times 0?"
@@ -208,16 +255,24 @@ def stream_graph_updates(
             snapshot.values["messages"][-1].pretty_print()
             print("next snapshot: ", snapshot.next)
 
+        else:
+            pass
+
         snapshot = graph.get_state(config)
         existing_messages = snapshot.values["messages"]
 
         print("Existing Messages:")
-        for i, msg in enumerate(existing_messages, 1):
+        for i, msg in enumerate(existing_messages, 0):
             print(f"Message {i}:")
             print(f"  Type: {type(msg).__name__}")
             print(f"  Content: {msg.content}")
             if hasattr(msg, "tool_calls"):
                 print(f"  Tool Calls: {msg.tool_calls}")
+            print()
+
+        for state in graph.get_state_history(config):
+            print("Num Messages: ", len(state.values["messages"]), "Next: ", state.next)
+            print("-" * 80)
             print()
 
 

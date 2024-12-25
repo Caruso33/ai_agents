@@ -1,9 +1,10 @@
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage, AIMessage
 from langgraph.graph import MessagesState
 
 from .llms import LLM
 from .state import State
 from .tools import llm_with_tools
+from .tools.request_assistance import RequestAssistance
 
 sys_prompt = """
 You are a helpful assistant who can use several tools at your disposal.
@@ -33,6 +34,36 @@ def chatbot(state: State):
         A new state with the messages processed by the chatbot.
     """
     return {"messages": [LLM.invoke(state["messages"])]}
+
+
+def chatbot_with_ask_human(state: State):
+    """
+    This node is the entry point for the chatbot application.
+    It takes a state containing a list of messages and returns a new state
+    with the messages processed by the chatbot and a boolean indicating
+    whether the chatbot requests human assistance.
+
+    Parameters
+    ----------
+    state : State
+        The state of the application containing a list of messages.
+
+    Returns
+    -------
+    State
+        A new state with the messages processed by the chatbot and a boolean
+        indicating whether the chatbot requests human assistance.
+    """
+    response = llm_with_tools.invoke(state["messages"])
+
+    ask_human = False
+    if (
+        response.tool_calls
+        and response.tool_calls[0]["name"] == RequestAssistance.__name__
+    ):
+        ask_human = True
+
+    return {"messages": [response], "ask_human": ask_human}
 
 
 def reasoner(state: MessagesState):
@@ -65,6 +96,33 @@ def reasoner(state: MessagesState):
     # print(f"messages {messages}\n")
 
     return {"messages": [llm_with_tools.invoke(messages)]}
+
+
+def create_tool_response(response: str, ai_message: AIMessage):
+    return ToolMessage(
+        content=response,
+        tool_call_id=ai_message.tool_calls[0]["id"],
+    )
+
+
+def human_node(state: State):
+    new_messages = []
+    if not isinstance(state["messages"][-1], ToolMessage):
+        # Typically, the user will have updated the state during the interrupt.
+        # If they choose not to, we will include a placeholder ToolMessage to
+        # let the LLM continue.
+        new_messages.append(
+            create_tool_response(
+                "No response from human.",
+                state["messages"][-1],
+            )
+        )
+    return {
+        # Append the new messages
+        "messages": new_messages,
+        # Unset the flag
+        "ask_human": False,
+    }
 
 
 if __name__ == "__main__":
