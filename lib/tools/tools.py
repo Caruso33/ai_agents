@@ -25,7 +25,7 @@ from langchain_community.tools import BraveSearch, DuckDuckGoSearchRun
 
 from langgraph_tutorial.ai.models import RequestAssistance
 
-from ..llms import LLM
+from ..ai.llms import LLM
 from .maths import add, divide, multiply, subtract
 from .weather import weather_forecast
 

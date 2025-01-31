@@ -11,13 +11,17 @@ langchain-core = "^0.3.28"
 langchain-community = "^0.3.13"
 langgraph = "^0.2.60"
 duckduckgo-search = "^6.4.2"
-langchain-google-vertexai = "^2.0.9"
 python-dotenv = "^1.0.1"
 requests = "^2.32.3"
+langchain-google-genai = "^2.0.9"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
+langgraph-cli = { extras = ["inmem"], version = "^0.1.70" }
 pylint = "^3.3.2"
+
+[tool.poetry.packages]
+packages = [{ include = "lib" }]
 
 [build-system]
 requires = ["poetry-core"]

@@ -7,8 +7,8 @@ from langgraph.graph import END
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import tools_condition
 
+from langgraph_tutorial.ai.models import RequestAssistance
 from langgraph_tutorial.ai.nodes import create_tool_response
-from langgraph_tutorial.ai.tools.request_assistance import RequestAssistance
 
 from ..state import State
 

@@ -12,16 +12,14 @@ This module is used to define the LLM that is used by the graph.
 import os
 
 from dotenv import load_dotenv
-from langchain_google_vertexai import ChatVertexAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = rf"{os.getcwd()}/vertexai.json"
 
 
 def get_vertex_models(model_name: str, **kwargs):
     """
-    Retrieves a ChatVertexAI model instance configured with the specified
+    Retrieves a ChatGoogleGenerativeAI model instance configured with the specified
     model name and additional parameters.
 
     Args:
@@ -29,13 +27,13 @@ def get_vertex_models(model_name: str, **kwargs):
         **kwargs: Additional keyword arguments for model configuration.
 
     Returns:
-        An instance of ChatVertexAI configured with the specified model name and parameters.
+        An instance of ChatGoogleGenerativeAI configured with the specified model name and parameters.
     """
-    return ChatVertexAI(
-        model_name=model_name,
-        project=os.getenv("GOOGLE_CLOUD_PROJECT"),
-        max_tokens=8192,
-        # **kwargs,
+    return ChatGoogleGenerativeAI(
+        model=model_name,
+        google_api_key=os.getenv("AI_STUDIO_API_KEY"),
+        max_output_tokens=8192,
+        **kwargs,
     )
 
 
@@ -43,7 +41,7 @@ LLM = get_vertex_models("gemini-2.0-flash-exp")
 LLM_RANDOM = get_vertex_models("gemini-1.5-pro-002", temperature=1.0)
 
 CONTEXT_WINDOW = {
-    ChatVertexAI: 1_000_000,
+    ChatGoogleGenerativeAI: 1_000_000,
 }.get(type(LLM), 0)
 
 
