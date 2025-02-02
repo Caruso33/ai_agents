@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "react-agent"
+version = "0.0.1"
+description = "Starter template for making a custom Reasoning and Action agent (using tool calling) in LangGraph."
+authors = ["William Fu-Hinthorn", "13333726+hinthornw@users.noreply.github.com"]
+readme = "README.md"
+license = "MIT"
+# packages = [
+#     { include = "react_agent" },
+# ]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langgraph = "^0.2.6"
+langchain-openai = "^0.1.22"
+langchain-anthropic = "^0.1.23"
+langchain = "^0.2.14"
+langchain-fireworks = "^0.1.7"
+python-dotenv = "^1.0.1"
+langchain-community = "^0.2.17"
+tavily-python = "^0.4.0"
+
+[tool.poetry.dev-dependencies]
+mypy = "^1.11.1"
+ruff = "^0.6.1"
+
+[tool.ruff]
+lint.select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "I",    # isort
+    "D",    # pydocstyle
+    "D401", # First line should be in imperative mood
+    "T201",
+    "UP",
+]
+lint.ignore = [
+    "UP006",
+    "UP007",
+    # We actually do want to import from typing_extensions
+    "UP035",
+    # Relax the convention by _not_ requiring documentation for every function parameter.
+    "D417",
+    "E501",
+]
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "UP"]
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

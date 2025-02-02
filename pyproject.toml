@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Tobias Leinß <tobias@leinss.xyz>"]
 readme = "README.md"
+packages = [{ include = "lib" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -20,8 +21,6 @@ black = "^24.8.0"
 langgraph-cli = { extras = ["inmem"], version = "^0.1.70" }
 pylint = "^3.3.2"
 
-[tool.poetry.packages]
-packages = [{ include = "lib" }]
 
 [build-system]
 requires = ["poetry-core"]
